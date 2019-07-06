@@ -118,6 +118,7 @@ func getElectionResult() (result []CandidateElectionResult) {
 	  	GROUP BY candidate_id) AS v
 		ON c.id = v.candidate_id
 		ORDER BY v.count DESC`)
+
 	if err != nil {
 		panic(err.Error())
 	}

@@ -51,6 +51,7 @@ func main() {
 		candidates := tmp[:10]
 		candidates = append(candidates, tmp[len(tmp)-1])
 
+		// 党ごとの投票数を計算する
 		partyNames := getAllPartyName()
 		partyResultMap := map[string]int{}
 		for _, name := range partyNames {
@@ -66,6 +67,7 @@ func main() {
 			r.VoteCount = count
 			partyResults = append(partyResults, r)
 		}
+
 		// 投票数でソート
 		sort.Slice(partyResults, func(i, j int) bool { return partyResults[i].VoteCount > partyResults[j].VoteCount })
 
@@ -73,6 +75,7 @@ func main() {
 			"men":   0,
 			"women": 0,
 		}
+
 		for _, r := range electionResults {
 			if r.Sex == "男" {
 				sexRatio["men"] += r.VoteCount
