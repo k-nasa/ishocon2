@@ -113,13 +113,7 @@ func main() {
 	r.GET("/political_parties/:name", func(c *gin.Context) {
 		partyName := c.Param("name")
 
-		var votes int
-		electionResults := getElectionResultWithName(partyName)
-
-		// 各候補者の投票数の合計を出す
-		for _, r := range electionResults {
-			votes += r.VoteCount
-		}
+		votes := getElectionResultWithName(partyName)
 
 		candidates := getCandidatesByPoliticalParty(partyName)
 		candidateIDs := []int{}

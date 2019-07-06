@@ -115,31 +115,18 @@ func getElectionResult() (result []CandidateElectionResult) {
 	return
 }
 
-func getElectionResultWithName(name string) (result []CandidateElectionResult) {
-	rows, err := db.Query(`
-    SELECT IFNULL(v.count, 0)
-    FROM candidates AS c
-    LEFT OUTER JOIN
-      (SELECT candidate_id, COUNT(*) AS count
-      FROM votes
-      GROUP BY candidate_id) AS v
-    ON c.id = v.candidate_id
-    WHERE c.political_party = ?
-    ORDER BY v.count DESC;
+func getElectionResultWithName(name string) int {
+
+	count := 0
+	rows := db.QueryRow(`
+   select count(1)
+   from votes
+   where candidate_id in (
+     select id from candidates where political_party = ?
+   );
   `, name)
 
-	if err != nil {
-		panic(err.Error())
-	}
-	defer rows.Close()
+	rows.Scan(&count)
 
-	for rows.Next() {
-		r := CandidateElectionResult{}
-		err = rows.Scan(&r.VoteCount)
-		if err != nil {
-			panic(err.Error())
-		}
-		result = append(result, r)
-	}
-	return
+	return count
 }
