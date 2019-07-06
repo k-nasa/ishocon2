@@ -71,6 +71,25 @@ func getAllPartyName() (partyNames []string) {
 	return
 }
 
+func getCandidatesIdsByPoliticalParty(party string) (ids []int) {
+	rows, err := db.Query("SELECT id FROM candidates WHERE political_party = ?", party)
+
+	if err != nil {
+		panic(err.Error())
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		c := Candidate{}
+		err = rows.Scan(&c.ID)
+		if err != nil {
+			panic(err.Error())
+		}
+		ids = append(ids, c.ID)
+	}
+	return
+}
+
 func getCandidatesByPoliticalParty(party string) (candidates []Candidate) {
 	rows, err := db.Query("SELECT * FROM candidates WHERE political_party = ?", party)
 	if err != nil {
