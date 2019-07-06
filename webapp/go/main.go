@@ -113,7 +113,7 @@ func main() {
 	r.GET("/political_parties/:name", func(c *gin.Context) {
 		partyName := c.Param("name")
 
-		votes := getElectionResultWithName(partyName)
+		votes := getElectionCountWithName(partyName)
 
 		candidates := getCandidatesByPoliticalParty(partyName)
 		candidateIDs := []int{}

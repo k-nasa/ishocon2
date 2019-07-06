@@ -134,9 +134,9 @@ func getElectionResult() (result []CandidateElectionResult) {
 	return
 }
 
-func getElectionResultWithName(name string) int {
-
+func getElectionCountWithName(name string) int {
 	count := 0
+
 	rows := db.QueryRow(`
    select count(1)
    from votes
