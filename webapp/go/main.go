@@ -36,7 +36,7 @@ func main() {
 
 	cacheClient = cache.New(5*time.Minute, 10*time.Minute)
 
-	gin.SetMode(gin.DebugMode)
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	r.Use(static.Serve("/css", static.LocalFile("public/css", true)))
 	layout := "templates/layout.tmpl"
