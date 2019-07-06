@@ -1,5 +1,9 @@
 package main
 
+import (
+	cache "github.com/patrickmn/go-cache"
+)
+
 // Candidate Model
 type Candidate struct {
 	ID             int
@@ -108,7 +112,13 @@ func getCandidatesByPoliticalParty(party string) (candidates []Candidate) {
 	return
 }
 
-func getElectionResult() (result []CandidateElectionResult) {
+func getElectionResult() []CandidateElectionResult {
+	cachedElection, found := cacheClient.Get("electionResult")
+
+	if found {
+		return cachedElection.([]CandidateElectionResult)
+	}
+
 	rows, err := db.Query(`
 		SELECT c.id, c.name, c.political_party, c.sex, IFNULL(v.count, 0)
 		FROM candidates AS c
@@ -124,6 +134,8 @@ func getElectionResult() (result []CandidateElectionResult) {
 	}
 	defer rows.Close()
 
+	var result []CandidateElectionResult
+
 	for rows.Next() {
 		r := CandidateElectionResult{}
 		err = rows.Scan(&r.ID, &r.Name, &r.PoliticalParty, &r.Sex, &r.VoteCount)
@@ -132,7 +144,9 @@ func getElectionResult() (result []CandidateElectionResult) {
 		}
 		result = append(result, r)
 	}
-	return
+
+	cacheClient.Set("electionResult", result, cache.DefaultExpiration)
+	return result
 }
 
 func getElectionCountWithName(name string) int {

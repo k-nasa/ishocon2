@@ -7,14 +7,17 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	cache "github.com/patrickmn/go-cache"
 )
 
 var db *sql.DB
+var cacheClient *cache.Cache
 
 func getEnv(key, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {
@@ -30,6 +33,8 @@ func main() {
 	dbname := getEnv("ISHOCON2_DB_NAME", "ishocon2")
 	db, _ = sql.Open("mysql", user+":"+pass+"@/"+dbname)
 	db.SetMaxIdleConns(5)
+
+	cacheClient = cache.New(5*time.Minute, 10*time.Minute)
 
 	gin.SetMode(gin.DebugMode)
 	r := gin.Default()
@@ -147,6 +152,8 @@ func main() {
 
 	// POST /vote
 	r.POST("/vote", func(c *gin.Context) {
+		cacheClient.Delete("electionResult")
+
 		user, userErr := getUser(c.PostForm("name"), c.PostForm("address"), c.PostForm("mynumber"))
 		candidate, cndErr := getCandidateByName(c.PostForm("candidate"))
 		votedCount := getUserVotedCount(user.ID)
