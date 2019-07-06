@@ -12,3 +12,6 @@ mysql:
 
 alp:
 	alp -f /var/log/nginx/access.log --aggregates "/political_parties/, /candidates/" --avg
+
+pt:
+	sudo pt-query-digest /var/log/mysql/slow.log
