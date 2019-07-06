@@ -11,7 +11,7 @@ mysql:
 	sudo systemctl restart mysql
 
 alp:
-	alp -f /var/log/nginx/access.log --aggregates "/political_parties/, /candidates/" --avg
+	alp -f /var/log/nginx/access.log --aggregates "/political_parties/, /candidates/" --avg --excludes "/initialize"
 
 pt:
 	sudo pt-query-digest /var/log/mysql/slow.log
