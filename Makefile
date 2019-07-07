@@ -4,7 +4,7 @@ prebench:
 	sudo systemctl restart mariadb
 
 nginx:
-	sudo cp -f ~/nginx.conf /etc/nginx.conf
+	sudo cp -f ~/nginx.conf /etc/nginx/nginx.conf
 	sudo systemctl restart nginx
 mysql:
 	sudo cp ~/my.cnf /etc/mysql/my.cnf
