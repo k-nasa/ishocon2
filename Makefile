@@ -1,5 +1,6 @@
 prebench:
 	sudo cp /dev/null /var/log/nginx/access.log
+	sudo cp /dev/null /var/log/mysql/slow.log
 	sudo systemctl restart nginx
 	sudo systemctl restart mariadb
 

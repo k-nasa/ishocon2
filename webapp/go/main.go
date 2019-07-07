@@ -32,7 +32,10 @@ func main() {
 	pass := getEnv("ISHOCON2_DB_PASSWORD", "ishocon")
 	dbname := getEnv("ISHOCON2_DB_NAME", "ishocon2")
 	db, _ = sql.Open("mysql", user+":"+pass+"@/"+dbname)
-	db.SetMaxIdleConns(5)
+
+	db.SetMaxIdleConns(20)
+	db.SetMaxOpenConns(40)
+	db.SetConnMaxLifetime(300 * time.Second)
 
 	cacheClient = cache.New(5*time.Minute, 10*time.Minute)
 
